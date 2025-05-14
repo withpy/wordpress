@@ -1,26 +1,14 @@
+# You can change this to a different version of Wordpress available at
+# https://hub.docker.com/_/wordpress
 FROM wordpress:latest
 
-# Install only what's needed (avoid bloat)
-RUN apt-get update && apt-get install -y \
-    magic-wormhole \
-    curl \
-    less \
-    vim \
- && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y magic-wormhole
 
-# Enable performance-related Apache modules
-RUN a2enmod rewrite headers expires deflate
+# RUN echo "Listen 0.0.0.0:80" >> /etc/apache2/ports.conf
 
-# Optimize Apache config for low latency
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
- && echo "Listen 0.0.0.0:10000" >> /etc/apache2/ports.conf
-
-# Add PHP performance tuning (OPcache + memory limit)
-COPY zz-performance.ini /usr/local/etc/php/conf.d/
-
-# Ensure proper file ownership for WordPress
-RUN chown -R www-data:www-data /var/www/html
-
+# Expose port 10000
 EXPOSE 10000
 
+RUN usermod -s /bin/bash www-data
+RUN chown www-data:www-data /var/www
 USER www-data:www-data
