@@ -4,6 +4,11 @@ FROM wordpress:latest
 
 RUN apt-get update && apt-get install -y magic-wormhole
 
+RUN echo "Listen 0.0.0.0:80" >> /etc/apache2/ports.conf
+
+# Expose port 80
+EXPOSE 80
+
 RUN usermod -s /bin/bash www-data
 RUN chown www-data:www-data /var/www
 USER www-data:www-data
